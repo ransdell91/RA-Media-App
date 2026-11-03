@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-title" content="R&amp;A">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
-<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="icon" type="image/svg+xml" href="icons/icon.svg">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <title>R&amp;A Media Productions</title>
 <script>try{var raT=localStorage.getItem("ra-theme");if(raT==="light"||raT==="dark")document.documentElement.setAttribute("data-theme",raT);}catch(e){}</script>
@@ -51,7 +51,10 @@ a{color:var(--accent-fg)}
 @media (min-width:600px){.wrap{padding-left:32px;padding-right:32px;padding-top:28px;gap:28px}}
 .top{display:flex;align-items:center;gap:10px;min-height:48px}
 .top .grow{flex:1;min-width:0}
-.mark{display:block;width:72px;height:42px;flex:none;border-radius:10px;padding:4px 6px;background:#FFFFFF url(icons/logo.png) center/contain no-repeat;background-origin:content-box;box-shadow:0 0 0 1px var(--line)}
+.mark{display:block;width:72px;height:42px;flex:none;border-radius:10px;padding:4px 6px;background:#FFFFFF url(icons/logo.svg) center/contain no-repeat;background-origin:content-box;box-shadow:0 0 0 1px var(--line)}
+/* Dark theme: same white tile (the R and A are cut-outs that need it), darker-striped logo. */
+:root[data-theme="dark"] .mark{background-image:url(icons/logo-dark.svg)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .mark{background-image:url(icons/logo-dark.svg)}}
 .eyebrow{font:500 11.5px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 h1{font:400 40px/1.02 var(--f-display);margin:0;letter-spacing:-.005em;text-wrap:balance}
 @media (min-width:600px){h1{font-size:52px}}
