@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-title" content="R&amp;A">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
-<link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <title>R&amp;A Media Productions</title>
 <script>try{var raT=localStorage.getItem("ra-theme");if(raT==="light"||raT==="dark")document.documentElement.setAttribute("data-theme",raT);}catch(e){}</script>
@@ -51,7 +51,7 @@ a{color:var(--accent-fg)}
 @media (min-width:600px){.wrap{padding-left:32px;padding-right:32px;padding-top:28px;gap:28px}}
 .top{display:flex;align-items:center;gap:10px;min-height:48px}
 .top .grow{flex:1;min-width:0}
-.mark{width:40px;height:40px;flex:none;border-radius:10px}
+.mark{display:block;width:72px;height:42px;flex:none;border-radius:10px;padding:4px 6px;background:#FFFFFF url(icons/logo.png) center/contain no-repeat;background-origin:content-box;box-shadow:0 0 0 1px var(--line)}
 .eyebrow{font:500 11.5px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 h1{font:400 40px/1.02 var(--f-display);margin:0;letter-spacing:-.005em;text-wrap:balance}
 @media (min-width:600px){h1{font-size:52px}}
@@ -106,7 +106,7 @@ button.item,a.item{cursor:pointer}
 /* sign-in */
 .signin{max-width:420px;width:100%;margin:0 auto;min-height:calc(100dvh - 80px);display:flex;flex-direction:column;justify-content:center;gap:16px}
 .sihead{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;margin-bottom:6px}
-.sihead .mark{width:64px;height:64px;margin-bottom:6px}
+.sihead .mark{width:150px;height:88px;margin-bottom:10px;border-radius:18px;padding:9px 13px}
 form.stack{display:flex;flex-direction:column;gap:10px}
 .field{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--muted)}
 .in{min-height:48px;width:100%;padding:0 14px;border-radius:12px;border:1px solid var(--line-strong);background:var(--field);color:var(--ink);font-size:16px;font-weight:400}
@@ -162,7 +162,7 @@ var APPS=[
   {id:'sbm', name:'SailorBloodMo0n', eb:'Anime channel', blurb:'News roundups, video essays, the shorts calendar and ideas.', href:'sbm/', icon:'sbm/icons/icon-192.png'}
 ];
 var TIERS={admin:{name:'Admin',help:'Every app. Can change everything and manage accounts.'},client:{name:'Client',help:'Only the apps you pick. Can view and make changes there.'},guest:{name:'Guest',help:'Only the apps you pick. View only.'}};
-var MARK='<img class="mark" src="icons/icon.svg" alt="R&amp;A">';
+var MARK='<span class="mark" role="img" aria-label="R&amp;A"></span>';
 var S={sb:null,session:null,me:null,state:'loading',accounts:null,signin:{email:'',sent:false,busy:false,msg:'',mode:null},ui:{edit:null,busy:false,pwOpen:false,pwBusy:false,arm:null}};
 
 function $(id){return document.getElementById(id);}
