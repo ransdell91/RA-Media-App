@@ -10,12 +10,12 @@
   "background_color": "#F3EFE6",
   "theme_color": "#17181C",
   "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "icons/icon-192-v2.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512-v2.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512-v2.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
   "shortcuts": [
-    { "name": "Off The Map", "url": "./otm/#today", "icons": [{ "src": "otm/icons/icon-192.png", "sizes": "192x192" }] },
-    { "name": "SailorBloodMo0n", "url": "./sbm/#today", "icons": [{ "src": "sbm/icons/icon-192.png", "sizes": "192x192" }] }
+    { "name": "Off The Map", "url": "./otm/#today", "icons": [{ "src": "otm/icons/icon-192-v2.png", "sizes": "192x192" }] },
+    { "name": "SailorBloodMo0n", "url": "./sbm/#today", "icons": [{ "src": "sbm/icons/icon-192-v2.png", "sizes": "192x192" }] }
   ]
 }
