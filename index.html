@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#F3EFE6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121316" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="R&amp;A">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<title>R&amp;A Media Productions</title>
+<script>try{var raT=localStorage.getItem("ra-theme");if(raT==="light"||raT==="dark")document.documentElement.setAttribute("data-theme",raT);}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* R&A home: sign-in, the app launcher, and settings (account, display, accounts & access). */
+:root{
+  --bg:#F3EFE6; --surface:#FFFDF8; --surface2:#EAE4D7; --ink:#17181C; --on-ink:#F3EFE6; --muted:#5F5A50;
+  --line:rgba(23,24,28,.12); --line-strong:rgba(23,24,28,.26); --field:#FFFFFF;
+  --accent:#C2452D; --on-accent:#FFFFFF; --accent-fg:#A93A24; --accent-soft:#F6DDD4;
+  --info-bg:#E2E7EE; --info-fg:#24384F; --warn-bg:#F7E3C7; --warn-fg:#6B3B00; --good:#2F6B4A;
+  --f-display:'Instrument Serif',Georgia,'Times New Roman',serif;
+  --f-body:'Instrument Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121316; --surface:#1B1D21; --surface2:#24262B; --ink:#EEEAE1; --on-ink:#121316; --muted:#A9A397;
+  --line:rgba(238,234,225,.12); --line-strong:rgba(238,234,225,.26); --field:#1F2125;
+  --accent:#D9573C; --on-accent:#FFFFFF; --accent-fg:#F08C73; --accent-soft:#3A221C;
+  --info-bg:#1E2833; --info-fg:#B9CBE0; --warn-bg:#3A2A14; --warn-fg:#F2C98C; --good:#7FC29B; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121316; --surface:#1B1D21; --surface2:#24262B; --ink:#EEEAE1; --on-ink:#121316; --muted:#A9A397;
+  --line:rgba(238,234,225,.12); --line-strong:rgba(238,234,225,.26); --field:#1F2125;
+  --accent:#D9573C; --on-accent:#FFFFFF; --accent-fg:#F08C73; --accent-soft:#3A221C;
+  --info-bg:#1E2833; --info-fg:#B9CBE0; --warn-bg:#3A2A14; --warn-fg:#F2C98C; --good:#7FC29B; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--f-body);-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+a{color:var(--accent-fg)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+.wrap{max-width:1040px;margin:0 auto;padding:calc(14px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(40px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:22px}
+@media (min-width:600px){.wrap{padding-left:32px;padding-right:32px;padding-top:28px;gap:28px}}
+.top{display:flex;align-items:center;gap:10px;min-height:48px}
+.top .grow{flex:1;min-width:0}
+.mark{width:40px;height:40px;flex:none;border-radius:10px}
+.eyebrow{font:500 11.5px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+h1{font:400 40px/1.02 var(--f-display);margin:0;letter-spacing:-.005em;text-wrap:balance}
+@media (min-width:600px){h1{font-size:52px}}
+h2{font:400 28px/1.1 var(--f-display);margin:0}
+h3{font:600 15px var(--f-body);margin:0}
+.sub{color:var(--muted);margin:0}
+.small{font-size:13px;color:var(--muted)}
+.mono{font-family:var(--f-mono)}
+.iconbtn{width:44px;height:44px;border:0;border-radius:12px;background:transparent;color:var(--ink);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex:none;text-decoration:none}
+.iconbtn:hover{background:var(--surface2)}
+.iconbtn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.iconbtn[aria-pressed="true"]{background:var(--surface2)}
+.btn{min-height:46px;padding:0 18px;border-radius:12px;border:0;background:var(--accent);color:var(--on-accent);font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;font-size:15px}
+.btn:disabled{opacity:.55;cursor:default}
+.btn.quiet{background:var(--surface);color:var(--ink);border:1px solid var(--line-strong)}
+.btn.danger{background:transparent;color:var(--accent-fg);border:1px solid var(--accent)}
+.btn.sm{min-height:38px;padding:0 14px;font-size:14px}
+.linkbtn{background:none;border:0;padding:6px 4px;color:var(--accent-fg);font-weight:600;cursor:pointer;min-height:44px}
+.group{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.group > * + *{border-top:1px solid var(--line)}
+.item{display:flex;align-items:center;gap:12px;padding:12px 14px;width:100%;background:transparent;border:0;text-align:left;color:inherit;text-decoration:none;font-size:15px}
+button.item,a.item{cursor:pointer}
+.item .grow{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.chev{width:18px;height:18px;flex:none;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.notice{display:flex;gap:10px;align-items:flex-start;border-radius:14px;padding:12px 14px;font-size:14px;background:var(--info-bg);color:var(--info-fg)}
+.notice.warn{background:var(--warn-bg);color:var(--warn-fg)}
+.pill{display:inline-flex;align-items:center;padding:2px 9px;border-radius:999px;font:600 11px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;background:var(--surface2);color:var(--ink);white-space:nowrap}
+.pill.admin{background:var(--ink);color:var(--on-ink)}
+.pill.client{background:var(--info-bg);color:var(--info-fg)}
+.pill.guest{background:transparent;box-shadow:inset 0 0 0 1px var(--line-strong);color:var(--muted)}
+
+/* home */
+.hello{display:flex;flex-direction:column;gap:8px}
+.tiles{display:grid;grid-template-columns:1fr;gap:14px}
+@media (min-width:600px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}}
+.tile{position:relative;display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:22px;text-decoration:none;color:var(--tile-fg);background:var(--tile-bg);min-height:190px;overflow:hidden;transition:transform .12s ease}
+.tile:active{transform:scale(.985)}
+.tile .tl{display:flex;align-items:center;gap:12px}
+.tile .tl img{width:52px;height:52px;border-radius:14px;flex:none;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.tile .eb{font:500 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;opacity:.8}
+.tile .nm{font:400 30px/1.05 var(--f-display)}
+.tile p{margin:0;font-size:14px;opacity:.88;max-width:40ch}
+.tile .go{margin-top:auto;display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:14px}
+.tile .go svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.t-otm{--tile-bg:#24352A;--tile-fg:#EDE3C8}
+.t-sbm{--tile-bg:#FF8CC6;--tile-fg:#3A1029}
+:root[data-theme="dark"] .t-sbm{--tile-bg:#5A1A43;--tile-fg:#FFF0F7}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .t-sbm{--tile-bg:#5A1A43;--tile-fg:#FFF0F7}}
+.tile.soon{background:transparent;border:1.5px dashed var(--line-strong);color:var(--muted);min-height:120px;justify-content:center}
+.pwcard{background:var(--accent-soft);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:10px}
+
+/* sign-in */
+.signin{max-width:420px;width:100%;margin:0 auto;min-height:calc(100dvh - 80px);display:flex;flex-direction:column;justify-content:center;gap:16px}
+.sihead{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;margin-bottom:6px}
+.sihead .mark{width:64px;height:64px;margin-bottom:6px}
+form.stack{display:flex;flex-direction:column;gap:10px}
+.field{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--muted)}
+.in{min-height:48px;width:100%;padding:0 14px;border-radius:12px;border:1px solid var(--line-strong);background:var(--field);color:var(--ink);font-size:16px;font-weight:400}
+.in.code{letter-spacing:.3em;font-family:var(--f-mono);text-align:center;font-size:20px}
+.pwwrap{display:flex;gap:6px;align-items:center}
+.pwwrap .in{flex:1}
+.sidivider{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:13px}
+.sidivider::before,.sidivider::after{content:"";flex:1;height:1px;background:var(--line-strong)}
+
+/* settings */
+.setsplit{display:flex;flex-direction:column;gap:20px}
+@media (min-width:760px){.setsplit{display:grid;grid-template-columns:minmax(250px,300px) minmax(0,1fr);gap:28px;align-items:start}}
+.setmenu{display:flex;flex-direction:column;gap:8px;min-width:0}
+.setg{margin:10px 4px 0}
+.setg:first-child{margin-top:0}
+.setrow{min-height:58px;gap:14px}
+.setrow[aria-current="page"]{background:var(--accent-soft)}
+.seticon{flex:none;width:34px;height:34px;border-radius:10px;background:var(--ink);color:var(--on-ink);display:flex;align-items:center;justify-content:center}
+.seticon svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.setsum{flex:none;max-width:45%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right}
+.setdetail{display:flex;flex-direction:column;gap:12px;min-width:0}
+.sethd{margin:12px 2px 0;font:600 12px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);background:var(--surface2);border-radius:12px;padding:3px;min-width:200px}
+.seg button{min-height:38px;border:0;border-radius:10px;background:transparent;color:var(--muted);cursor:pointer;font-size:14px}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.acct .who{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.acct .who b{font-weight:600}
+.acct .apps{font-size:12.5px;color:var(--muted)}
+.form{display:flex;flex-direction:column;gap:14px;padding:16px}
+.checks{display:flex;flex-wrap:wrap;gap:8px}
+.cb{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border-radius:12px;border:1px solid var(--line-strong);background:var(--field);cursor:pointer;font-weight:500;font-size:14px}
+.cb input{width:18px;height:18px;accent-color:var(--accent);margin:0}
+.cb.dis{opacity:.55;cursor:default}
+.tierhelp{display:grid;gap:8px;font-size:13.5px}
+.tierhelp div{display:grid;grid-template-columns:72px 1fr;gap:10px;align-items:baseline}
+.tierhelp .pill{justify-self:start}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(24px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--on-ink);padding:10px 16px;border-radius:12px;font-size:14px;z-index:30;max-width:calc(100vw - 32px)}
+.empty{border:1.5px dashed var(--line-strong);border-radius:16px;padding:22px;text-align:center;color:var(--muted)}
+</style>
+</head>
+<body>
+<div id="view"></div>
+<div id="toast" class="toast" role="status" hidden></div>
+<script src="vendor/supabase-2.45.4.js"></script>
+<script>
+(function(){
+'use strict';
+var SB_URL='https://fbskjgluladhqocklyre.supabase.co', SB_KEY='sb_publishable_rJg33Y3FlK_3lCIPW1jQ8Q_VAjcEUXp';
+var VERSION='1.0';
+/* Every app that lives inside R&A. Access is per app; admins see them all. */
+var APPS=[
+  {id:'otm', name:'Off The Map', eb:'California history channel', blurb:'Episodes, the production runway, shoot trips, ideas and reminders.', href:'otm/', icon:'otm/icons/icon-192.png'},
+  {id:'sbm', name:'SailorBloodMo0n', eb:'Anime channel', blurb:'News roundups, video essays, the shorts calendar and ideas.', href:'sbm/', icon:'sbm/icons/icon-192.png'}
+];
+var TIERS={admin:{name:'Admin',help:'Every app. Can change everything and manage accounts.'},client:{name:'Client',help:'Only the apps you pick. Can view and make changes there.'},guest:{name:'Guest',help:'Only the apps you pick. View only.'}};
+var MARK='<img class="mark" src="icons/icon.svg" alt="R&amp;A">';
+var S={sb:null,session:null,me:null,state:'loading',accounts:null,signin:{email:'',sent:false,busy:false,msg:'',mode:null},ui:{edit:null,busy:false,pwOpen:false,pwBusy:false,arm:null}};
+
+function $(id){return document.getElementById(id);}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function svg(d,c){return '<svg class="'+(c||'chev')+'" viewBox="0 0 24 24" aria-hidden="true"><path d="'+d+'"/></svg>';}
+function lsGet(k,d){try{var v=localStorage.getItem(k);return v==null?d:v;}catch(e){return d;}}
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+function timed(p,ms){return Promise.race([p,new Promise(function(_,rej){setTimeout(function(){rej({timeout:true,message:'timeout'});},ms);})]);}
+var toastT;function toast(m){var t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(function(){t.hidden=true;},2600);}
+function route(){var h=(location.hash||'#home').slice(1);if(h.indexOf('settings')===0)return {v:'settings',sec:h.split('-')[1]||null};if(h==='signin')return {v:'signin'};return {v:'home'};}
+function wide(){return window.matchMedia('(min-width:760px)').matches;}
+function myApps(){if(!S.me)return [];return APPS.filter(function(a){return S.me.role==='admin'||(S.me.apps||[]).indexOf(a.id)>=0;});}
+function firstName(){var n=(S.me&&S.me.name)||'';return n.split(' ')[0];}
+function greet(){var h=new Date().getHours();return h<5?'Working late':h<12?'Good morning':h<17?'Good afternoon':'Good evening';}
+
+/* ---------- theme ---------- */
+function theme(){return lsGet('ra-theme','system');}
+function applyTheme(){var t=theme();if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else document.documentElement.removeAttribute('data-theme');}
+
+/* ---------- auth ---------- */
+async function start(){
+  applyTheme();
+  if(!window.supabase){S.state='offline';render();return;}
+  /* A pass-through lock: the browser lock in supabase-js can stall on Android. */
+  S.sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,lock:function(n,t,fn){return fn();}}});
+  S.sb.auth.onAuthStateChange(function(ev,session){
+    var had=!!S.session; S.session=session;
+    if(session&&!had)setTimeout(loadMe,0);
+    if(!session&&ev==='SIGNED_OUT'){S.me=null;S.state='signedout';render();}
+  });
+  var g=await S.sb.auth.getSession(); var s=g.data&&g.data.session;
+  if(s){S.session=s;loadMe();}else{S.state='signedout';render();}
+}
+async function loadMe(){
+  S.state=S.me?'ready':'loading';render();
+  try{
+    var r=await timed(S.sb.rpc('ra_me'),15000); if(r.error)throw r.error;
+    S.me=r.data||null; lsSet('ra-me',JSON.stringify(S.me));
+    S.state=S.me?'ready':'denied';
+  }catch(e){
+    var c=null;try{c=JSON.parse(lsGet('ra-me','null'));}catch(x){}
+    if(c&&S.session&&S.session.user&&c.email===(S.session.user.email||'').toLowerCase()){S.me=c;S.state='ready';}else S.state='error';
+  }
+  if(location.hash==='#signin')history.replaceState(null,'','#home');
+  /* A client or guest with a single app goes straight into it. */
+  var a=myApps();
+  if(S.state==='ready'&&S.me.role!=='admin'&&a.length===1&&!sessionStorage.getItem('ra-stay')&&route().v==='home'){location.replace(a[0].href);return;}
+  render();
+  if(S.me&&S.me.role==='admin'&&route().v==='settings')loadAccounts();
+}
+async function signInPassword(email,pw){
+  S.signin.busy=true;S.signin.msg='';S.signin.email=email;render();
+  var r=await S.sb.auth.signInWithPassword({email:email,password:pw});
+  S.signin.busy=false;
+  if(r.error){S.signin.msg=/invalid/i.test(r.error.message||'')?'That email and password don’t match. First time here, or forgot it? Use an email code below.':(/rate/i.test(r.error.message||'')?'Too many tries. Wait a minute, then try again.':'Couldn’t sign in. Check your connection and try again.');render();return;}
+  lsSet('ra-signinMode','password');
+}
+async function sendCode(email){
+  S.signin.busy=true;S.signin.msg='';render();
+  var r=await S.sb.auth.signInWithOtp({email:email,options:{emailRedirectTo:location.origin+location.pathname,shouldCreateUser:true}});
+  S.signin.busy=false;
+  if(r.error){S.signin.msg=/rate/i.test(r.error.message||'')?'Too many requests. Wait a minute, then try again.':'That didn’t send. Check the address and your connection, then try again.';}
+  else{S.signin.email=email;S.signin.sent=true;}
+  render();
+}
+async function verifyCode(code){
+  S.signin.busy=true;S.signin.msg='';render();
+  var r=await S.sb.auth.verifyOtp({email:S.signin.email,token:code,type:'email'});
+  S.signin.busy=false;
+  if(r.error){S.signin.msg='That code didn’t work. Check it, or send a new one.';render();}
+}
+async function setPassword(p){
+  if(p.length<8){toast('Use at least 8 characters.');return;}
+  S.ui.pwBusy=true;render();
+  var r=await S.sb.auth.updateUser({password:p,data:{pw_set:true}});
+  S.ui.pwBusy=false;
+  if(r.error){toast(/same/i.test(r.error.message||'')?'That’s already your password.':'Couldn’t save it: '+(r.error.message||'try again')+'.');render();return;}
+  if(r.data&&r.data.user&&S.session)S.session.user=r.data.user;
+  S.ui.pwOpen=false;lsSet('ra-signinMode','password');render();toast('Password saved. Use it next time you sign in.');
+}
+function needsPassword(){var u=S.session&&S.session.user;return !!(u&&!(u.user_metadata&&u.user_metadata.pw_set)&&lsGet('ra-pwskip','')!==(u.id||''));}
+async function signOut(){
+  await S.sb.auth.signOut();
+  ['ra-me','ra-otm-cache-v1','ra-otm-outbox-v1','ra-sbm-cache-v1','ra-sbm-outbox-v1'].forEach(function(k){try{localStorage.removeItem(k);}catch(e){}});
+  S.me=null;S.accounts=null;S.state='signedout';location.hash='#signin';render();
+}
+
+/* ---------- accounts (admins) ---------- */
+async function loadAccounts(){
+  var r=await timed(S.sb.from('accounts').select('email,name,role,apps,added_at').order('role').order('name'),15000).catch(function(e){return {error:e};});
+  if(r.error){toast('Couldn’t load accounts. Check your connection.');return;}
+  S.accounts=r.data||[]; render();
+}
+async function saveAccount(f){
+  var email=(f.email||'').trim().toLowerCase(), name=(f.name||'').trim(), role=f.role, apps=role==='admin'?APPS.map(function(a){return a.id;}):f.apps;
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){toast('Enter a full email address.');return;}
+  if(role!=='admin'&&!apps.length){toast('Pick at least one app.');return;}
+  S.ui.busy=true;render();
+  var q=f.isNew?S.sb.from('accounts').insert({email:email,name:name||null,role:role,apps:apps,added_by:S.me.email})
+              :S.sb.from('accounts').update({name:name||null,role:role,apps:apps}).eq('email',f.orig);
+  var r=await timed(q,15000).catch(function(e){return {error:e};});
+  S.ui.busy=false;
+  if(r.error){toast(/duplicate|unique/i.test(r.error.message||'')?'That email already has an account.':/admin/i.test(r.error.message||'')?'There has to be at least one admin.':'Couldn’t save: '+(r.error.message||'try again')+'.');render();return;}
+  S.ui.edit=null; toast(f.isNew?'Account added. They can sign in now.':'Account saved.');
+  if(f.orig===S.me.email)await loadMe(); await loadAccounts();
+}
+async function removeAccount(email){
+  if(S.ui.arm!==email){S.ui.arm=email;render();setTimeout(function(){if(S.ui.arm===email){S.ui.arm=null;render();}},4000);return;}
+  S.ui.arm=null;S.ui.busy=true;render();
+  var r=await timed(S.sb.from('accounts').delete().eq('email',email),15000).catch(function(e){return {error:e};});
+  S.ui.busy=false;
+  if(r.error){toast(/admin/i.test(r.error.message||'')?'There has to be at least one admin.':'Couldn’t remove it. Try again.');render();return;}
+  S.ui.edit=null;toast('Access removed.');loadAccounts();
+}
+
+/* ---------- views ---------- */
+function viewSignIn(){
+  var s=S.signin, mode=s.mode||lsGet('ra-signinMode','password'), body;
+  var msg=s.msg?'<div class="notice warn">'+esc(s.msg)+'</div>':'';
+  if(mode==='password'){
+    body='<form class="stack" data-form="pw"><label class="field">Email<input class="in" id="si-email" type="email" autocomplete="username" inputmode="email" required placeholder="you@example.com" value="'+esc(s.email)+'"></label>'+
+      '<label class="field">Password<span class="pwwrap"><input class="in" id="si-pw" type="password" autocomplete="current-password" required placeholder="Your password"><button class="iconbtn" type="button" data-a="pwshow" data-t="si-pw" aria-label="Show password" aria-pressed="false">'+svg('M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12zM12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6','')+'</button></span></label>'+
+      '<button class="btn" type="submit"'+(s.busy?' disabled':'')+'>'+(s.busy?'Signing in…':'Sign in')+'</button></form>'+
+      '<div class="sidivider"><span>or</span></div><button class="btn quiet" type="button" data-a="mode-code">Email me a sign-in code</button>'+
+      '<p class="small" style="text-align:center;margin:0">First time here, or forgot your password? Use an email code, then set a password.</p>';
+  }else if(!s.sent){
+    body='<form class="stack" data-form="send"><label class="field">Email<input class="in" id="si-email" type="email" autocomplete="email" inputmode="email" required placeholder="you@example.com" value="'+esc(s.email)+'"></label><button class="btn" type="submit"'+(s.busy?' disabled':'')+'>'+(s.busy?'Sending…':'Email me a sign-in code')+'</button></form>'+
+      '<button class="linkbtn" type="button" data-a="mode-pw" style="align-self:center">Sign in with a password instead</button>';
+  }else{
+    body='<div class="notice">We sent an email to <strong>'+esc(s.email)+'</strong>. Enter the 6-digit code here, or open the link on this phone.</div>'+
+      '<form class="stack" data-form="code"><label class="field">Code<input class="in code" id="si-code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="10" placeholder="000000"></label><button class="btn" type="submit"'+(s.busy?' disabled':'')+'>'+(s.busy?'Checking…':'Sign in')+'</button></form>'+
+      '<div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap"><button class="linkbtn" type="button" data-a="resend">Send a new code</button><button class="linkbtn" type="button" data-a="mode-pw">Use a password</button></div>';
+  }
+  return '<div class="wrap"><div class="signin"><div class="sihead">'+MARK+'<div class="eyebrow">R&amp;A Media Productions</div><h1>Sign in</h1><p class="sub">One sign-in for every R&amp;A app.</p></div>'+msg+body+'</div></div>';
+}
+function topbar(title,eb,back){
+  return '<header class="top">'+(back?'<a class="iconbtn" href="'+back+'" aria-label="Back">'+svg('M15 5l-7 7 7 7','')+'</a>':MARK)+
+    '<div class="grow"><div class="eyebrow">'+esc(eb)+'</div>'+(title?'<div style="font-weight:600">'+esc(title)+'</div>':'')+'</div>'+
+    (route().v==='settings'?'':'<a class="iconbtn" href="#settings" aria-label="Settings" title="Settings">'+svg('M12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z','')+'</a>')+'</header>';
+}
+function viewHome(){
+  var apps=myApps(), role=S.me.role;
+  var tiles=apps.map(function(a){return '<a class="tile t-'+a.id+'" href="'+a.href+'"><span class="tl"><img src="'+a.icon+'" alt=""><span><span class="eb">'+esc(a.eb)+'</span><br><span class="nm">'+esc(a.name)+'</span></span></span><p>'+esc(a.blurb)+'</p><span class="go">Open'+svg('M5 12h14M13 6l6 6-6 6','')+'</span></a>';}).join('');
+  if(!apps.length)tiles='<div class="empty">No apps are shared with this account yet. An admin can add them in Settings → Accounts &amp; access.</div>';
+  if(role==='admin')tiles+='<div class="tile soon"><span style="font-weight:600;color:var(--ink)">Client spaces</span><span class="small">When you produce for a client, their app shows up here. Give them a Client or Guest account in Settings → Accounts &amp; access.</span></div>';
+  var pw=needsPassword()?'<div class="pwcard"><h3>Set a password</h3><p class="small" style="margin:0;color:inherit">You signed in with an email code. A password makes next time faster.</p>'+pwForm('Save password')+'<button class="linkbtn" type="button" data-a="pwskip" style="align-self:flex-start;padding-left:0">Not now</button></div>':'';
+  return '<div class="wrap">'+topbar('','R&A Media Productions')+
+    '<section class="hello"><h1>'+esc(greet())+(firstName()?', '+esc(firstName()):'')+'.</h1><p class="sub">'+(apps.length>1?'Pick a production to work on.':apps.length?'Your production is ready.':'')+' <span class="pill '+role+'">'+TIERS[role].name+'</span></p></section>'+
+    pw+'<section class="tiles" aria-label="Apps">'+tiles+'</section></div>';
+}
+function pwForm(label){
+  return '<form class="stack" data-form="setpw"><span class="pwwrap"><input class="in" id="pw-new" type="password" autocomplete="new-password" minlength="8" placeholder="New password, 8+ characters" aria-label="New password"><button class="iconbtn" type="button" data-a="pwshow" data-t="pw-new" aria-label="Show password" aria-pressed="false">'+svg('M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12zM12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6','')+'</button></span><button class="btn" type="submit"'+(S.ui.pwBusy?' disabled':'')+'>'+(S.ui.pwBusy?'Saving…':label)+'</button></form>';
+}
+function segRow(label,sub,key,cur,opts){
+  return '<div class="item" style="flex-wrap:wrap;gap:10px"><span class="grow" style="min-width:140px"><span style="font-weight:500">'+label+'</span>'+(sub?'<span class="small">'+sub+'</span>':'')+'</span><div class="seg" role="group" aria-label="'+label+'">'+opts.map(function(o){return '<button type="button" data-a="'+key+'" data-k="'+o[0]+'" aria-pressed="'+(cur===o[0])+'">'+o[1]+'</button>';}).join('')+'</div></div>';
+}
+function accountForm(){
+  var e=S.ui.edit, isMe=!e.isNew&&e.orig===S.me.email;
+  var roleSeg='<div class="seg" role="group" aria-label="Tier">'+['admin','client','guest'].map(function(r){return '<button type="button" data-a="frole" data-k="'+r+'" aria-pressed="'+(e.role===r)+'">'+TIERS[r].name+'</button>';}).join('')+'</div>';
+  var apps='<div class="checks">'+APPS.map(function(a){var on=e.role==='admin'||e.apps.indexOf(a.id)>=0;return '<label class="cb'+(e.role==='admin'?' dis':'')+'"><input type="checkbox" data-a="fapp" data-k="'+a.id+'"'+(on?' checked':'')+(e.role==='admin'?' disabled':'')+'>'+esc(a.name)+'</label>';}).join('')+'</div>';
+  return '<div class="group"><form class="form" data-form="acct">'+
+    '<h3>'+(e.isNew?'Add an account':'Edit '+esc(e.name||e.email))+'</h3>'+
+    '<label class="field">Email<input class="in" id="f-email" type="email" inputmode="email" autocomplete="off" value="'+esc(e.email)+'"'+(e.isNew?'':' disabled')+' placeholder="name@example.com"></label>'+
+    '<label class="field">Name<input class="in" id="f-name" value="'+esc(e.name)+'" maxlength="40" placeholder="Shown on the home screen"></label>'+
+    '<div class="field">Tier'+roleSeg+'<span class="small" style="font-weight:400">'+TIERS[e.role].help+(isMe&&e.role!=='admin'?' You’d lose admin access.':'')+'</span></div>'+
+    '<div class="field">Apps'+apps+'</div>'+
+    '<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" type="submit"'+(S.ui.busy?' disabled':'')+'>'+(e.isNew?'Add account':'Save')+'</button><button class="btn quiet" type="button" data-a="fcancel">Cancel</button>'+
+    (e.isNew||isMe?'':'<button class="btn danger" type="button" data-a="fremove" data-k="'+esc(e.orig)+'" style="margin-left:auto">'+(S.ui.arm===e.orig?'Tap again to remove':'Remove access')+'</button>')+'</div>'+
+    (e.isNew?'<p class="small" style="margin:0">They sign in at this app’s address with this email. The first time, they use an email code and then set a password.</p>':'')+
+    '</form></div>';
+}
+function viewSettings(){
+  var r=route(), admin=S.me.role==='admin', em=(S.session&&S.session.user&&S.session.user.email)||'';
+  var acct='<div class="item"><span class="grow"><span style="font-weight:500">'+esc((S.me&&S.me.name)||em)+'</span><span class="small">'+esc(em)+'</span></span><span class="pill '+S.me.role+'">'+TIERS[S.me.role].name+'</span></div>'+
+    (S.ui.pwOpen?'<div class="item" style="flex-direction:column;align-items:stretch;gap:8px"><span style="font-weight:500">Set a password</span><span class="small">At least 8 characters. You can paste one from your password manager.</span>'+pwForm('Save password')+'</div>':
+     '<div class="item"><span class="grow"><span style="font-weight:500">Password</span><span class="small">Sign in with your email and a password.</span></span><button class="btn quiet sm" type="button" data-a="pwopen">Set password</button></div>')+
+    '<div class="item"><span class="grow"><span style="font-weight:500">Sign out</span><span class="small">Signs out of every R&amp;A app on this phone.</span></span><button class="btn quiet sm" type="button" data-a="signout">Sign out</button></div>';
+  var disp=segRow('Theme','Only changes this phone.','theme',theme(),[['system','Auto'],['light','Light'],['dark','Dark']]);
+  var about='<div class="item"><span class="grow"><span style="font-weight:500">R&amp;A app version '+VERSION+'</span><span class="small">Updates install on their own when you reopen the app.</span></span><button class="btn quiet sm" type="button" data-a="update">Check now</button></div>'+
+    '<div class="item"><span class="grow"><span style="font-weight:500">App settings</span><span class="small">Reminders and each production’s own settings live inside that app, under its gear button.</span></span></div>';
+  var list='';
+  if(admin){
+    if(!S.accounts)list='<div class="group"><div class="item"><span class="small">Loading accounts…</span></div></div>';
+    else list='<div class="group">'+S.accounts.map(function(a){var appsTxt=a.role==='admin'?'All apps':(a.apps||[]).map(function(id){var x=APPS.filter(function(p){return p.id===id;})[0];return x?x.name:id;}).join(', ')||'No apps';return '<button class="item acct" type="button" data-a="fedit" data-k="'+esc(a.email)+'"><span class="who"><b>'+esc(a.name||a.email)+(a.email===S.me.email?' (you)':'')+'</b><span class="small">'+esc(a.email)+'</span><span class="apps">'+esc(appsTxt)+'</span></span><span class="pill '+a.role+'">'+TIERS[a.role].name+'</span>'+svg('M9 5l7 7-7 7')+'</button>';}).join('')+'</div>';
+    list=(S.ui.edit?accountForm():'<button class="btn" type="button" data-a="fnew" style="align-self:flex-start">'+svg('M12 5v14M5 12h14','')+'Add an account</button>')+list+
+      '<h3 class="sethd">Tiers</h3><div class="group"><div class="item tierhelp">'+['admin','client','guest'].map(function(k){return '<div><span class="pill '+k+'">'+TIERS[k].name+'</span><span>'+TIERS[k].help+'</span></div>';}).join('')+'</div></div>';
+  }
+  var secs=[
+    {k:'account',g:'You',t:'Account',ic:'M12 12a4 4 0 1 0 0-8a4 4 0 1 0 0 8M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6',sum:TIERS[S.me.role].name,body:'<div class="group">'+acct+'</div>'},
+    {k:'display',g:'This phone',t:'Display',ic:'M12 3v2M12 19v2M5 12H3M21 12h-2M6 6l1.5 1.5M16.5 16.5 18 18M6 18l1.5-1.5M16.5 7.5 18 6M12 8a4 4 0 1 0 0 8a4 4 0 1 0 0-8',sum:({system:'Auto',light:'Light',dark:'Dark'})[theme()]+' theme',body:'<div class="group">'+disp+'</div>'}
+  ];
+  if(admin)secs.push({k:'accounts',g:'Business',t:'Accounts & access',ic:'M16 11a3 3 0 1 0 0-6a3 3 0 1 0 0 6M8 11a3 3 0 1 0 0-6a3 3 0 1 0 0 6M2 20c.8-3 3-4.5 6-4.5s5.2 1.5 6 4.5M14 15.6c.6-.1 1.3-.1 2-.1 3 0 5.2 1.5 6 4.5',sum:S.accounts?S.accounts.length+' account'+(S.accounts.length===1?'':'s'):'',note:'Who can sign in, their tier, and which apps they can open.',body:list});
+  secs.push({k:'about',g:'App',t:'About & updates',ic:'M12 8h.01M11 12h1v5h1M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18',sum:'Version '+VERSION,body:'<div class="group">'+about+'</div>'});
+  var w=wide(), cur=secs.filter(function(x){return x.k===r.sec;})[0]; if(w&&!cur)cur=secs[0];
+  var menu='',lastG='';
+  secs.forEach(function(x){if(x.g!==lastG){menu+=(lastG?'</div>':'')+'<p class="eyebrow setg">'+x.g+'</p><div class="group">';lastG=x.g;}
+    menu+='<a class="item setrow" href="#settings-'+x.k+'" aria-current="'+(w&&cur&&cur.k===x.k?'page':'false')+'"><span class="seticon"><svg viewBox="0 0 24 24"><path d="'+x.ic+'"/></svg></span><span class="grow"><span style="font-weight:600">'+esc(x.t)+'</span></span><span class="small setsum">'+esc(x.sum)+'</span>'+svg('M9 5l7 7-7 7')+'</a>';});
+  menu+='</div>';
+  var detail=cur?'<div class="setdetail">'+(w?'<h2>'+esc(cur.t)+'</h2>':'')+(cur.note?'<p class="sub">'+cur.note+'</p>':'')+cur.body+'</div>':'';
+  var back=!w&&cur?'#settings':'#home', title=!w&&cur?cur.t:'Settings';
+  return '<div class="wrap">'+topbar(title,!w&&cur?'Settings':'R&A Media Productions',back)+(w?'<div class="setsplit"><nav class="setmenu" aria-label="Settings sections">'+menu+'</nav>'+detail+'</div>':(cur?detail:'<nav class="setmenu" aria-label="Settings sections">'+menu+'</nav>'))+'</div>';
+}
+function viewDenied(){
+  var em=S.session&&S.session.user?S.session.user.email:'';
+  return '<div class="wrap"><div class="signin"><div class="sihead">'+MARK+'<h1>No access yet</h1><p class="sub">'+esc(em)+' isn’t set up in R&amp;A. Ask Rian or Anna to add it in Settings → Accounts &amp; access, then reload.</p></div><button class="btn quiet" type="button" data-a="signout">Sign out</button></div></div>';
+}
+function viewMsg(t,s){return '<div class="wrap"><div class="signin"><div class="sihead">'+MARK+'<h1>'+t+'</h1><p class="sub">'+s+'</p></div><button class="btn quiet" type="button" data-a="reload">Try again</button></div></div>';}
+var lastHtml='';
+function render(){
+  var r=route(), h;
+  if(S.state==='signedout')h=viewSignIn();
+  else if(S.state==='loading')h='<div class="wrap"><div class="signin"><div class="sihead">'+MARK+'<p class="sub">Loading…</p></div></div></div>';
+  else if(S.state==='denied')h=viewDenied();
+  else if(S.state==='offline')h=viewMsg('Can’t start','The sign-in library didn’t load. Check your connection.');
+  else if(S.state==='error')h=viewMsg('Can’t reach R&amp;A','Check your connection.');
+  else h=r.v==='settings'?viewSettings():viewHome();
+  if(h===lastHtml)return; lastHtml=h;
+  var keep=document.activeElement&&document.activeElement.id, val=keep&&document.activeElement.value;
+  $('view').innerHTML=h;
+  if(keep&&$(keep)){var el=$(keep);if(val!=null&&el.value!==val&&el.type!=='checkbox')el.value=val;try{el.focus();}catch(e){}}
+}
+
+/* ---------- events ---------- */
+window.addEventListener('hashchange',function(){S.ui.edit=null;S.ui.arm=null;if(route().v==='settings'&&S.me&&S.me.role==='admin'&&!S.accounts)loadAccounts();if(route().v==='home')sessionStorage.setItem('ra-stay','1');render();window.scrollTo(0,0);});
+window.addEventListener('resize',function(){render();});
+document.addEventListener('submit',function(ev){
+  var f=ev.target.closest('form[data-form]');if(!f)return;ev.preventDefault();var k=f.getAttribute('data-form');
+  if(k==='pw'){var e0=($('si-email').value||'').trim(),p0=$('si-pw').value||'';if(e0&&p0)signInPassword(e0,p0);}
+  if(k==='send'){var e1=($('si-email').value||'').trim();if(e1)sendCode(e1);}
+  if(k==='code'){var c=($('si-code').value||'').replace(/\D/g,'');if(c)verifyCode(c);}
+  if(k==='setpw'){setPassword($('pw-new').value||'');}
+  if(k==='acct'){var e=S.ui.edit;e.email=$('f-email').value;e.name=$('f-name').value;saveAccount(e);}
+});
+document.addEventListener('click',function(ev){
+  var b=ev.target.closest('[data-a]');if(!b)return;var a=b.getAttribute('data-a'),k=b.getAttribute('data-k');
+  if(a==='fapp'){var e=S.ui.edit;var i=e.apps.indexOf(k);if(b.checked&&i<0)e.apps.push(k);if(!b.checked&&i>=0)e.apps.splice(i,1);return;}
+  function keepForm(){var e=S.ui.edit;if(e&&$('f-name')){e.name=$('f-name').value;if(e.isNew)e.email=$('f-email').value;}}
+  if(a==='mode-code'){var e0=$('si-email');S.signin={email:e0?e0.value.trim():S.signin.email,sent:false,busy:false,msg:'',mode:'code'};render();}
+  if(a==='mode-pw'){S.signin={email:S.signin.email,sent:false,busy:false,msg:'',mode:'password'};render();}
+  if(a==='resend')sendCode(S.signin.email);
+  if(a==='pwshow'){var p=$(b.getAttribute('data-t'));if(p){var sh=p.type==='password';p.type=sh?'text':'password';b.setAttribute('aria-pressed',String(sh));p.focus();}}
+  if(a==='pwopen'){S.ui.pwOpen=true;render();var n=$('pw-new');if(n)n.focus();}
+  if(a==='pwskip'){var u=S.session&&S.session.user;lsSet('ra-pwskip',(u&&u.id)||'');render();}
+  if(a==='signout')signOut();
+  if(a==='reload')location.reload();
+  if(a==='theme'){lsSet('ra-theme',k);applyTheme();render();}
+  if(a==='update'){if(!('serviceWorker' in navigator)){toast('Updates aren’t available in this browser.');return;}navigator.serviceWorker.getRegistration().then(function(reg){if(!reg){toast('Install the app to get updates.');return;}reg.update().then(function(){toast(reg.installing||reg.waiting?'Updating…':'You’re on the latest version.');});});}
+  if(a==='fnew'){S.ui.edit={isNew:true,email:'',orig:null,name:'',role:'client',apps:[]};render();var f=$('f-email');if(f)f.focus();}
+  if(a==='fedit'){var x=(S.accounts||[]).filter(function(z){return z.email===k;})[0];if(x){S.ui.edit={isNew:false,email:x.email,orig:x.email,name:x.name||'',role:x.role,apps:(x.apps||[]).slice()};S.ui.arm=null;render();window.scrollTo({top:0,behavior:'smooth'});}}
+  if(a==='frole'){keepForm();S.ui.edit.role=k;render();}
+  if(a==='fcancel'){S.ui.edit=null;S.ui.arm=null;render();}
+  if(a==='fremove')removeAccount(k);
+});
+
+/* ---------- boot ---------- */
+start();
+if('serviceWorker' in navigator){
+  var hadCtrl=!!navigator.serviceWorker.controller, reloading=false;
+  navigator.serviceWorker.addEventListener('controllerchange',function(){if(!hadCtrl){hadCtrl=true;return;}if(reloading||S.ui.edit)return;reloading=true;location.reload();});
+  window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js',{scope:'./'}).then(function(reg){
+    document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')reg.update().catch(function(){});});
+  }).catch(function(){});});
+}
+})();
+</script>
+</body>
+</html>
