@@ -205,9 +205,23 @@ h3{margin:0;font-family:var(--f-display);font-weight:800;font-size:26px;line-hei
 .signin{max-width:440px;padding-top:max(48px,env(safe-area-inset-top,0px));gap:16px}
 .sihead{display:flex;flex-direction:column;gap:8px;align-items:flex-start}
 .sihead .logo{width:48px;height:48px}
-body.gate .nav,body.gate .fab{display:none}
+body.gate .nav,body.gate .fab,body.gate .topbar{display:none}
 .wrap{padding-top:max(14px,env(safe-area-inset-top,0px))}
 .avatar{width:34px;height:34px;border-radius:50%;background:var(--news);color:#fff;font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center}
+/* top bar (same layout as Off The Map) */
+.stage{flex:1 1 auto;min-width:0;min-height:0;display:flex;flex-direction:column}
+.topbar{flex:none;background:var(--bg);position:relative;z-index:6;transition:box-shadow .2s}
+.topbar.scrolled{box-shadow:0 1px 0 rgba(var(--line-rgb),.14),0 6px 14px -10px rgba(0,0,0,.25)}
+.tb-in{max-width:1100px;margin:0 auto;box-sizing:border-box;height:74px;padding:8px max(10px,env(safe-area-inset-right,0px)) 6px max(20px,env(safe-area-inset-left,0px));display:flex;align-items:center;gap:6px}
+.tb-back{margin-left:-10px;color:var(--link)}
+.tb-titles{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.tb-titles .eyebrow{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.tb-title{font-family:var(--f-display);font-weight:800;font-size:28px;line-height:1.08;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.01em}
+.tb-act{display:flex;align-items:center;gap:0;flex:none}
+.tb-act .iconbtn,.tb-back.iconbtn{border:0;background:transparent}
+.tb-act .iconbtn svg,.tb-back svg{width:22px;height:22px;stroke-width:1.8}
+.tb-avatar{width:44px;height:44px;border:0;background:transparent;padding:0;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:50%}
+@media (min-width:600px){.tb-in{height:88px;padding:14px max(24px,env(safe-area-inset-right,0px)) 8px 32px}.tb-title{font-size:34px}}
 .homelink{display:inline-flex;align-items:center;gap:2px;flex-direction:row-reverse;text-decoration:none;color:var(--muted);min-height:44px}
 .homelink .homeback{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 </style>
@@ -215,7 +229,8 @@ body.gate .nav,body.gate .fab{display:none}
 <body>
 <div class="app">
   <nav class="nav" aria-label="Main" id="nav"></nav>
-  <main class="main" id="view" tabindex="-1"></main>
+  <div class="stage"><header class="topbar" id="topbar"></header>
+  <main class="main" id="view" tabindex="-1"></main></div>
 </div>
 <button class="fab" type="button" data-act="add" aria-label="Quick add"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
 <div id="sheet"></div>
@@ -566,6 +581,23 @@ function renderNav(active){
   document.getElementById('nav').innerHTML='<div class="rail-top">'+HOMELINK+'<button class="railadd" type="button" data-act="add" aria-label="Quick add">'+svg('M12 5v14M5 12h14')+'</button></div>'+
     TABS.map(function(t){return '<a class="tab" href="#'+t[0]+'"'+(a===t[0]?' aria-current="page"':'')+'><svg viewBox="0 0 24 24" aria-hidden="true"><path d="'+t[2]+'"/></svg><span>'+t[1]+'</span></a>';}).join('');
 }
+/* ---------- top bar (same layout as Off The Map) ---------- */
+var TB={eb:''};
+function initial(){var n=(S.me&&S.me.name)||(S.session&&S.session.user&&S.session.user.email)||'A';return n.trim().charAt(0).toUpperCase();}
+function topbarHtml(r){
+  var t='',eb=TB.eb,back=null,base='SailorBloodMo0n';
+  if(r.v==='today'){t='Today';eb=base+' · daily plan';}
+  else if(r.v==='month'){t='Month';eb=base+' · releases and shorts';}
+  else if(r.v==='videos'){t='Videos';eb=eb||base;}
+  else if(r.v==='video'){var v=S.videos[r.id];back=['#videos','Videos'];t=v?vName(v):'Video';eb=v?(SHOW[v.show]||base):'Videos';}
+  else if(r.v==='shorts'){t='Shorts';eb=eb||base;}
+  else {t='Ideas';eb=eb||base;}
+  var em=(S.session&&S.session.user&&S.session.user.email)||'';
+  return '<div class="tb-in">'+(back?'<a class="iconbtn tb-back" href="'+back[0]+'" aria-label="Back to '+back[1]+'">'+svg(BACK)+'</a>':'')+
+    '<div class="tb-titles"><div class="eyebrow">'+esc(eb)+'</div><h1 class="tb-title">'+esc(t)+'</h1></div>'+
+    '<div class="tb-act"><a class="iconbtn" href="'+RA_HOME+'" aria-label="R&amp;A home" title="Back to the R&amp;A home screen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7M6 9.5V20h12V9.5M10 20v-5h4v5"/></svg></a>'+
+    '<button class="tb-avatar" type="button" data-act="account" aria-label="Account and settings" title="'+esc(em?em+' · account and settings':'Account and settings')+'"><span class="avatar">'+esc(initial())+'</span></button></div></div>';
+}
 function banner(){var ro=S.readOnly?'<div class="notice">View only. You can look around, but changes won’t save.</div>':'';return ro+banner0();}
 function banner0(){
   var n=S.outbox.length,pend=n?(n===1?'1 change':n+' changes'):'';
@@ -611,8 +643,8 @@ function viewToday(){
     strip+='<button class="wd'+(x===real?' now':'')+'" type="button" data-act="setday" data-k="'+x+'" aria-pressed="'+(x===d)+'" aria-label="'+esc(fmt(x))+'"><span class="l">'+DOW[dow(x)].charAt(0)+'</span><span class="n">'+pd(x).getDate()+'</span><span class="dots">'+dots+'</span></button>';}
   var done=items.filter(function(x){return x.done;}).length;
   var h='<div class="wrap">'+banner()+
-    '<header class="stack" style="gap:10px"><div class="between" style="align-items:center"><div class="row"><span class="only-narrow">'+HOMELINK+'</span><span class="eyebrow">'+esc(fmt(d).toUpperCase())+' · '+(wk.week===5?'CATCH-UP WEEK':'WEEK '+wk.week)+' · '+esc(monthName(wk.month,true).toUpperCase())+'</span></div>'+
-    '<div class="row" style="gap:4px"><button class="iconbtn" type="button" data-act="shiftday" data-k="-1" aria-label="Previous day">'+svg(BACK)+'</button>'+(d!==real?'<button class="btn quiet sm" type="button" data-act="setday" data-k="'+real+'">Today</button>':'')+'<button class="iconbtn" type="button" data-act="shiftday" data-k="1" aria-label="Next day">'+svg(CHEV)+'</button><button type="button" data-act="account" aria-label="Account and settings" style="width:44px;height:44px;border:0;background:transparent;padding:0;cursor:pointer;display:flex;align-items:center;justify-content:center"><span class="avatar">'+esc(((S.session&&S.session.user&&S.session.user.email)||'A').charAt(0).toUpperCase())+'</span></button></div></div>'+
+    '<header class="stack" style="gap:10px"><div class="between" style="align-items:center"><div class="row"><span class="eyebrow">'+esc(fmt(d).toUpperCase())+' · '+(wk.week===5?'CATCH-UP WEEK':'WEEK '+wk.week)+' · '+esc(monthName(wk.month,true).toUpperCase())+'</span></div>'+
+    '<div class="row" style="gap:4px"><button class="iconbtn" type="button" data-act="shiftday" data-k="-1" aria-label="Previous day">'+svg(BACK)+'</button>'+(d!==real?'<button class="btn quiet sm" type="button" data-act="setday" data-k="'+real+'">Today</button>':'')+'<button class="iconbtn" type="button" data-act="shiftday" data-k="1" aria-label="Next day">'+svg(CHEV)+'</button></div></div>'+
     '<div><h1>'+esc(heading)+'</h1><div class="sub" style="margin-top:4px">'+(dw===0?'Off, apart from the 30-minute review':hrs(mins)+' planned · '+(avail?hrs(avail)+' day':'no time set for today'))+(mins>avail+30&&avail?' · over by '+hrs(mins-avail):'')+'</div></div></header>'+
     (set.holidays[d]?'<div class="notice warn">'+esc(set.holidays[d])+'. If you’re taking it off, move today’s work to the day before.</div>':'')+
     '<div class="cols"><div class="col"><div class="week" role="group" aria-label="This week">'+strip+'</div>'+
@@ -701,13 +733,13 @@ function viewVideos(selId){
     return wide()?'<button class="item" type="button" data-act="vidsel" data-id="'+esc(v.id)+'" aria-current="'+(v.id===sel)+'">'+inner+'</button>':'<a class="item" href="#video-'+esc(v.id)+'">'+inner+'</a>';
   }).join('')+'</div></section>';}).join('');
   var v=S.videos[sel];
-  return '<div class="panes"><div class="pane-list">'+banner()+'<header><div class="eyebrow">'+inprod+' IN PRODUCTION</div><h1>Videos</h1></header><div class="chips" role="group" aria-label="Filter by show">'+chips+'</div>'+(list||'<div class="empty">No videos yet.</div>')+'</div><div class="pane-detail">'+(v?videoDetail(v,true):'')+'</div></div>';
+  return '<div class="panes"><div class="pane-list">'+banner()+(TB.eb=inprod+' in production','')+'<div class="chips" role="group" aria-label="Filter by show">'+chips+'</div>'+(list||'<div class="empty">No videos yet.</div>')+'</div><div class="pane-detail">'+(v?videoDetail(v,true):'')+'</div></div>';
 }
 function viewVideo(id){
   var v=S.videos[id];
   if(wide())return viewVideos(id);
   if(!v)return '<div class="wrap">'+banner()+'<a class="linkbtn" href="#videos">'+svg(BACK)+' Videos</a><div class="empty">'+(S.dbState==='ready'?'This video isn’t in the plan any more.':'Loading…')+'</div></div>';
-  return '<div class="wrap" style="gap:16px"><a class="linkbtn" href="#videos" style="align-self:flex-start;margin-left:-4px"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2"><path d="'+BACK+'"/></svg>Videos</a>'+videoDetail(v,false)+'</div>';
+  return '<div class="wrap" style="gap:16px">'+videoDetail(v,false)+'</div>';
 }
 function videoDetail(v,pane){
   var real=today(),r=releaseOf(v),nx=nextStep(v),tab=S.ui.vidTab;
@@ -761,7 +793,7 @@ function viewShorts(){
   var bar=[['scheduled','background:var(--short)'],['editing','background:var(--short);opacity:.7'],['filmed','background:var(--short);opacity:.55'],['to-film','background:var(--short);opacity:.35'],['waiting','background:var(--news);opacity:.55'],['planned','background:rgba(var(--line-rgb),.25)']];
   var total=days.length||1;
   var sel=S.shorts[S.ui.shortSel];
-  return '<div class="panes"><div class="pane-list">'+banner()+'<header class="between" style="align-items:flex-end"><div><div class="eyebrow">NEXT 6 WEEKS · '+days.length+' SLOTS · 4 A WEEK</div><h1>Shorts</h1></div><button class="iconbtn" type="button" data-act="add" data-k="short" aria-label="Add a short" style="background:var(--short);color:#1F2A12;border:0">'+svg('M12 5v14M5 12h14')+'</button></header>'+
+  return '<div class="panes"><div class="pane-list">'+banner()+''+(TB.eb='Next 6 weeks · '+days.length+' slots · 4 a week','')+
     '<div class="notice'+(q<7&&real>=sett().shortsNightStart?' warn':'')+'">'+(q>=7?'The queue covers the next '+q+' days.':(q?'Shorts are scheduled for only the next '+q+' day'+(q>1?'s':'')+'.':'No shorts are scheduled for the next 7 days.')+' Keep 7 days in the queue: the next film night goes to shorts first.')+'</div>'+
     '<div class="card pad stack" style="gap:10px"><div style="display:flex;height:10px;gap:2px;border-radius:5px;overflow:hidden">'+bar.map(function(b){return counts[b[0]]?'<span style="flex:'+counts[b[0]]+';'+b[1]+'"></span>':'';}).join('')+(open?'<span style="flex:'+open+';box-shadow:inset 0 0 0 1.5px var(--short-ink)"></span>':'')+'</div><div class="legend">'+bar.map(function(b){return counts[b[0]]?'<span><span style="width:9px;height:9px;border-radius:3px;'+b[1]+'"></span>'+esc(STATUS_NAME[b[0]])+' '+counts[b[0]]+'</span>':'';}).join('')+'<span><span style="width:9px;height:9px;border-radius:3px;box-shadow:inset 0 0 0 1.5px var(--short-ink)"></span>Open '+open+'</span></div></div>'+
     '<div class="chips" role="group" aria-label="Filter by source">'+[['all','All'],['cut','From videos'],['solo','Standalone']].map(function(c){return '<button class="chip" type="button" data-act="shortsrc" data-k="'+c[0]+'" aria-pressed="'+(f===c[0])+'">'+c[1]+'</button>';}).join('')+'</div>'+
@@ -785,7 +817,7 @@ function viewIdeas(){
   var groups=Object.keys(KIND).filter(function(k){return f==='all'||f===k;}).map(function(k){var it=all.filter(function(i){return i.kind===k;});if(!it.length)return '';
     return '<section class="stack" style="gap:8px"><h2 class="gh">'+esc(KIND[k].toUpperCase())+' · '+it.length+'</h2>'+it.map(function(i){var v=S.videos[i.video];return '<div class="card pad stack" style="gap:10px'+(S.ui.ideaSel===i.id&&wide()?';border:2px solid var(--accent-fg)':'')+'"><button type="button" data-act="ideasel" data-id="'+esc(i.id)+'" style="border:0;background:none;padding:0;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:4px;color:var(--ink)"><span style="font-weight:600">'+esc(i.title)+'</span>'+(i.note?'<span class="small">'+esc(i.note)+'</span>':'')+'</button><div class="between" style="align-items:center;flex-wrap:wrap"><span class="small">'+(i.used?(v?'In '+esc(vName(v)):'Used'+(i.usedOn?' · '+esc(fmt(i.usedOn)):'')):k==='essay'?'Could yield 3 to 5 shorts':k==='news'?'For a news roundup':'Standalone short')+'</span>'+(i.used?'<span class="pill posted">Greenlit</span>':'<button class="btn sm" type="button" data-act="greenlight" data-id="'+esc(i.id)+'">'+(k==='essay'?'Greenlight':k==='news'?'Add to next roundup':'Use in next open slot')+'</button>')+'</div></div>';}).join('')+'</section>';}).join('');
   var sel=S.ideas[S.ui.ideaSel];
-  return '<div class="panes"><div class="pane-list">'+banner()+'<header class="between" style="align-items:flex-end"><div><div class="eyebrow">'+all.length+' IDEAS · '+shortsReady+' SHORTS-READY</div><h1>Ideas</h1></div><button class="iconbtn" type="button" data-act="add" data-k="idea" aria-label="New idea" style="background:var(--accent);color:var(--on-accent);border:0">'+svg('M12 5v14M5 12h14')+'</button></header>'+
+  return '<div class="panes"><div class="pane-list">'+banner()+''+(TB.eb=all.length+' ideas · '+shortsReady+' shorts-ready','')+
     (shortsReady<6?'<div class="notice">Keep 6 or more shorts-ready ideas here. Any slot still open 7 days out gets one. '+(6-shortsReady)+' more to go.</div>':'')+
     '<div class="chips" role="group" aria-label="Filter by kind">'+chips+'</div>'+(groups||'<div class="empty">No ideas yet. Add essay topics, news segments and short ideas as they come.</div>')+'</div><div class="pane-detail">'+(sel?ideaDetail(sel):'<div class="empty">Pick an idea to see its notes.</div>')+'</div></div>';
 }
@@ -875,13 +907,14 @@ function submitSheet(form){
 function render(){
   var el=document.getElementById('view'),need=S.dbState!=='signedout'&&mustChange(),gate=need||S.dbState==='signedout'||S.dbState==='denied'||(S.dbState==='error'&&!sb&&!S.cachedAt);
   document.body.classList.toggle('gate',gate);
-  if(gate){document.getElementById('nav').innerHTML='';var html=need?viewNewPassword():S.dbState==='denied'?viewDenied():viewSignIn();if(el.getAttribute('data-gate')!==html){el.innerHTML=html;el.setAttribute('data-gate',html);}return;}
+  if(gate){document.getElementById('nav').innerHTML='';document.getElementById('topbar').innerHTML='';var html=need?viewNewPassword():S.dbState==='denied'?viewDenied():viewSignIn();if(el.getAttribute('data-gate')!==html){el.innerHTML=html;el.setAttribute('data-gate',html);}return;}
   el.removeAttribute('data-gate');
   build();
   var r=route(),h;
-  renderNav(r.v);
+  renderNav(r.v);TB.eb='';
   if(r.v==='today')h=viewToday();else if(r.v==='month')h=viewMonth();else if(r.v==='videos')h=viewVideos();else if(r.v==='video')h=viewVideo(r.id);else if(r.v==='shorts')h=viewShorts();else h=viewIdeas();
   var y=el.scrollTop;el.innerHTML=h;el.scrollTop=y;
+  var tb=document.getElementById('topbar');if(tb){var th=topbarHtml(r);if(tb.getAttribute('data-h')!==th){tb.innerHTML=th;tb.setAttribute('data-h',th);}tb.classList.toggle('scrolled',el.scrollTop>4);}
   if(S.ui.sheet&&(S.ui.sheet.kind==='review'||S.ui.sheet.kind==='shortview'))renderSheet();
 }
 
@@ -941,6 +974,7 @@ document.addEventListener('submit',function(e){
   submitSheet(f);
 });
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&S.ui.sheet)closeSheet();});
+document.getElementById('view').addEventListener('scroll',function(){var tb=document.getElementById('topbar');if(tb)tb.classList.toggle('scrolled',this.scrollTop>4);},{passive:true});
 window.addEventListener('hashchange',function(){if(S.ui.sheet&&S.ui.sheet.kind!=='review')closeSheet();var r=route();if(r.v==='video'){S.ui.vidSel=r.id;}document.getElementById('view').scrollTop=0;render();});
 var mq=window.matchMedia('(min-width:600px)');if(mq.addEventListener)mq.addEventListener('change',render);
 if(window.matchMedia){var tq=window.matchMedia('(prefers-color-scheme: dark)');if(tq.addEventListener)tq.addEventListener('change',function(){applyTheme();render();});}

@@ -69,6 +69,9 @@ a{color:var(--link)}
 .tb-title{font-family:var(--f-display);font-weight:700;font-size:28px;line-height:1.08;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tb-act{display:flex;align-items:center;gap:0;flex:none}
 .tb-act .iconbtn[aria-pressed="true"]{background:var(--sand);color:var(--accent-fg)}
+.tb-avatar{width:44px;height:44px;border:0;background:transparent;padding:0;margin-left:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--on-accent);font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center;transition:box-shadow .15s}
+.tb-avatar[aria-pressed="true"] .avatar{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--accent)}
 .nav{position:fixed;z-index:15;left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));bottom:calc(10px + env(safe-area-inset-bottom,0px));max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;padding:6px;box-sizing:border-box;background:color-mix(in srgb,var(--surface2) 86%,transparent);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);border:1px solid var(--line);border-radius:28px;box-shadow:0 10px 30px -8px rgba(0,0,0,.35),0 2px 6px rgba(0,0,0,.08)}
 .nav .rail-top{display:none}
 .tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:52px;text-decoration:none;color:var(--muted);font-size:11px;line-height:1;border-radius:22px;transition:background .15s,color .15s}
@@ -946,6 +949,7 @@ function viewPrompts(){
 
 /* ---------- top bar: the same on every screen ---------- */
 var GEAR_SVG='<svg viewBox="0 0 24 24"><path d="M12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>';
+function meName(){return ((S.me&&S.me.name)||(S.session&&S.session.user&&S.session.user.email)||'Account').trim();}
 function topbarHtml(r){
   var t='', eb='', back=null, launch=(S.settings&&S.settings.launch)||'2027-02-19';
   if(r.v==='today'){t='Today';eb='Off The Map · California';}
@@ -962,7 +966,7 @@ function topbarHtml(r){
   var onSet=r.v==='settings';
   return '<div class="tb-in">'+(back?'<a class="iconbtn tb-back" href="'+back[0]+'" aria-label="Back to '+back[1]+'" data-tip="Back to '+back[1]+'">'+svg('M15 5l-7 7 7 7','')+'</a>':'')+
     '<div class="tb-titles"><div class="eyebrow">'+esc(eb)+'</div><h1 class="tb-title">'+esc(t)+'</h1></div>'+
-    '<div class="tb-act"><a class="iconbtn" href="'+RA_HOME+'" aria-label="R&amp;A home" data-tip="Back to the R&amp;A home screen"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 11l8-7 8 7M6 9.5V20h12V9.5M10 20v-5h4v5\"/></svg></a>'+driveBtn()+claudeBtn()+bellBtn()+'<button class="iconbtn" type="button" data-act="settings" aria-pressed="'+onSet+'" aria-label="Settings" data-tip="'+(onSet?'Close settings':'Settings: notifications, reminders, display and account')+'">'+GEAR_SVG+'</button></div></div>';
+    '<div class="tb-act"><a class="iconbtn" href="'+RA_HOME+'" aria-label="R&amp;A home" data-tip="Back to the R&amp;A home screen"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 11l8-7 8 7M6 9.5V20h12V9.5M10 20v-5h4v5\"/></svg></a>'+driveBtn()+claudeBtn()+bellBtn()+'<button class="tb-avatar" type="button" data-act="settings" aria-pressed="'+onSet+'" aria-label="Account and settings" data-tip="'+(onSet?'Close settings':esc(meName())+' · account, notifications, reminders and display')+'"><span class="avatar">'+esc(meName().charAt(0).toUpperCase())+'</span></button></div></div>';
 }
 /* ---------- Claude chats ---------- */
 var DEFAULT_LINKS=[{id:'project',name:'Off The Map CA project',url:'',note:'The project page: every chat and file'},{id:'appdev',name:'OTM App Developer',url:'https://claude.ai/code/session_01SeKF9eavJ12HGTuzXuskiY',note:'Changes, fixes and new features for this app'}];
@@ -1504,7 +1508,7 @@ document.addEventListener('keydown',function(ev){
 window.addEventListener('hashchange',function(){S.ui.epTab='overview';hideTip();render();var m=document.getElementById('main');if(m)m.scrollTop=0;});
 var lastWide=null;window.addEventListener('resize',function(){var w=wide();if(w!==lastWide){lastWide=w;render();}});
 lastWide=wide();
-var APP_VERSION='RA-1.06 · OTM 1.25';
+var APP_VERSION='RA-1.07 · OTM 1.26';
 S.ui.who=getWho();
 applyTheme();
 startScreen();

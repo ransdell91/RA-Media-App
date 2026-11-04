@@ -1,7 +1,7 @@
 // R&A Media Productions: offline support for the R&A home and every app inside it.
 // The app shell is cached so each app opens without a connection.
 // Data is never cached here; each app keeps its own copy of what it last loaded.
-const VERSION = 'ra-1.06';
+const VERSION = 'ra-1.07';
 const SHELL = [
   './', './index.html', './manifest.webmanifest', './vendor/supabase-2.45.4.js',
   './icons/icon-192-v2.png', './icons/icon-512-v2.png', './icons/icon-maskable-512-v2.png', './icons/favicon-32.png', './icons/apple-touch-icon.png', './icons/badge-96.png', './icons/logo-on-dark.svg', './icons/logo-on-light.svg', './icons/icon.svg',
