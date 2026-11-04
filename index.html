@@ -101,6 +101,7 @@ button.item,a.item{cursor:pointer}
 .tile .go svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .t-otm{--tile-bg:#24352A;--tile-fg:#EDE3C8}
 .t-sbm{--tile-bg:#FF8CC6;--tile-fg:#3A1029}
+.t-farm{--tile-bg:#2E6A4E;--tile-fg:#F4F8F5}
 :root[data-theme="dark"] .t-sbm{--tile-bg:#5A1A43;--tile-fg:#FFF0F7}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .t-sbm{--tile-bg:#5A1A43;--tile-fg:#FFF0F7}}
 .tile.soon{background:transparent;border:1.5px dashed var(--line-strong);color:var(--muted);min-height:120px;justify-content:center}
@@ -162,7 +163,8 @@ var VERSION='1.0';
 /* Every app that lives inside R&A. Access is per app; admins see them all. */
 var APPS=[
   {id:'otm', name:'Off The Map', eb:'California history channel', blurb:'Episodes, the production runway, shoot trips, ideas and reminders.', href:'otm/', icon:'otm/icons/icon-192.png'},
-  {id:'sbm', name:'SailorBloodMo0n', eb:'Anime channel', blurb:'News roundups, video essays, the shorts calendar and ideas.', href:'sbm/', icon:'sbm/icons/icon-192.png'}
+  {id:'sbm', name:'SailorBloodMo0n', eb:'Anime channel', blurb:'News roundups, video essays, the shorts calendar and ideas.', href:'sbm/', icon:'sbm/icons/icon-192.png'},
+  {id:'farm', name:'Farm R&A', eb:'Humboldt Farms', blurb:'The farm journal and FSA Groundwork Plan: daily tasks, flock, eggs, money, receipts and the plan.', href:'farm/', icon:'farm/icons/icon-192.png'}
 ];
 var TIERS={admin:{name:'Admin',help:'Every app. Can change everything and manage accounts.'},client:{name:'Client',help:'Only the apps you pick. Can view and make changes there.'},guest:{name:'Guest',help:'Only the apps you pick. View only.'}};
 var MARK='<span class="mark" role="img" aria-label="R&amp;A"></span>';
@@ -220,8 +222,22 @@ async function signInPassword(email,pw){
   S.signin.busy=true;S.signin.msg='';S.signin.email=email;render();
   var r=await S.sb.auth.signInWithPassword({email:email,password:pw});
   S.signin.busy=false;
-  if(r.error){S.signin.msg=/invalid/i.test(r.error.message||'')?'That email and password don’t match. First time here, or forgot it? Use an email code below.':(/rate/i.test(r.error.message||'')?'Too many tries. Wait a minute, then try again.':'Couldn’t sign in. Check your connection and try again.');render();return;}
+  if(r.error){S.signin.msg=/invalid/i.test(r.error.message||'')?'That email and password don’t match. First time here? Tap Create your password below.':(/rate/i.test(r.error.message||'')?'Too many tries. Wait a minute, then try again.':'Couldn’t sign in. Check your connection and try again.');render();return;}
   lsSet('ra-signinMode','password');
+}
+/* First sign-in without an email: people on the account list with no password yet choose one (function ra-first-password). */
+async function createPassword(email,pw){
+  if(pw.length<8){S.signin.msg='Use at least 8 characters.';S.signin.email=email;render();return;}
+  S.signin.busy=true;S.signin.msg='';S.signin.email=email;render();
+  var res=null;
+  try{var r=await timed(fetch(SB_URL+'/functions/v1/ra-first-password',{method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY,Authorization:'Bearer '+SB_KEY},body:JSON.stringify({email:email,password:pw})}),20000);res=await r.json().catch(function(){return {error:'Unexpected answer from the server.'};});}
+  catch(e){res={error:'Couldn’t reach R&A. Check your connection.'};}
+  if(!res||!res.ok){S.signin.busy=false;S.signin.msg=(res&&res.error)||'That didn’t work. Try again.';render();return;}
+  var r2=await S.sb.auth.signInWithPassword({email:email,password:pw});
+  S.signin.busy=false;
+  if(r2.error){S.signin.msg='Your password is set, but signing in failed. Try signing in with it.';S.signin.mode='password';render();return;}
+  lsSet('ra-signinMode','password');
+  try{await S.sb.auth.updateUser({data:{pw_set:true}});}catch(e){}
 }
 async function sendCode(email){
   S.signin.busy=true;S.signin.msg='';render();
@@ -249,7 +265,7 @@ async function setPassword(p){
 function needsPassword(){var u=S.session&&S.session.user;return !!(u&&!(u.user_metadata&&u.user_metadata.pw_set)&&lsGet('ra-pwskip','')!==(u.id||''));}
 async function signOut(){
   await S.sb.auth.signOut();
-  ['ra-me','ra-otm-cache-v1','ra-otm-outbox-v1','ra-sbm-cache-v1','ra-sbm-outbox-v1'].forEach(function(k){try{localStorage.removeItem(k);}catch(e){}});
+  ['ra-me','ra-otm-cache-v1','ra-otm-outbox-v1','ra-sbm-cache-v1','ra-sbm-outbox-v1','ra-farm-me'].forEach(function(k){try{localStorage.removeItem(k);}catch(e){}});
   S.me=null;S.accounts=null;S.state='signedout';location.hash='#signin';render();
 }
 
@@ -289,8 +305,14 @@ function viewSignIn(){
     body='<form class="stack" data-form="pw"><label class="field">Email<input class="in" id="si-email" type="email" autocomplete="username" inputmode="email" required placeholder="you@example.com" value="'+esc(s.email)+'"></label>'+
       '<label class="field">Password<span class="pwwrap"><input class="in" id="si-pw" type="password" autocomplete="current-password" required placeholder="Your password"><button class="iconbtn" type="button" data-a="pwshow" data-t="si-pw" aria-label="Show password" aria-pressed="false">'+svg('M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12zM12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6','')+'</button></span></label>'+
       '<button class="btn" type="submit"'+(s.busy?' disabled':'')+'>'+(s.busy?'Signing in…':'Sign in')+'</button></form>'+
-      '<div class="sidivider"><span>or</span></div><button class="btn quiet" type="button" data-a="mode-code">Email me a sign-in code</button>'+
-      '<p class="small" style="text-align:center;margin:0">First time here, or forgot your password? Use an email code, then set a password.</p>';
+      '<div class="sidivider"><span>or</span></div><button class="btn quiet" type="button" data-a="mode-create">First time? Create your password</button>'+
+      '<button class="linkbtn" type="button" data-a="mode-code" style="align-self:center">Email me a sign-in code instead</button>';
+  }else if(mode==='create'){
+    body='<p class="small" style="text-align:center;margin:0">For people on the R&amp;A account list who haven’t set a password yet.</p>'+
+      '<form class="stack" data-form="create"><label class="field">Email<input class="in" id="si-email" type="email" autocomplete="username" inputmode="email" required placeholder="you@example.com" value="'+esc(s.email)+'"></label>'+
+      '<label class="field">New password<span class="pwwrap"><input class="in" id="si-pw" type="password" autocomplete="new-password" minlength="8" required placeholder="At least 8 characters"><button class="iconbtn" type="button" data-a="pwshow" data-t="si-pw" aria-label="Show password" aria-pressed="false">'+svg('M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12zM12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6','')+'</button></span></label>'+
+      '<button class="btn" type="submit"'+(s.busy?' disabled':'')+'>'+(s.busy?'Setting up…':'Create password and sign in')+'</button></form>'+
+      '<button class="linkbtn" type="button" data-a="mode-pw" style="align-self:center">I already have a password</button>';
   }else if(!s.sent){
     body='<form class="stack" data-form="send"><label class="field">Email<input class="in" id="si-email" type="email" autocomplete="email" inputmode="email" required placeholder="you@example.com" value="'+esc(s.email)+'"></label><button class="btn" type="submit"'+(s.busy?' disabled':'')+'>'+(s.busy?'Sending…':'Email me a sign-in code')+'</button></form>'+
       '<button class="linkbtn" type="button" data-a="mode-pw" style="align-self:center">Sign in with a password instead</button>';
@@ -394,6 +416,7 @@ window.addEventListener('resize',function(){render();});
 document.addEventListener('submit',function(ev){
   var f=ev.target.closest('form[data-form]');if(!f)return;ev.preventDefault();var k=f.getAttribute('data-form');
   if(k==='pw'){var e0=($('si-email').value||'').trim(),p0=$('si-pw').value||'';if(e0&&p0)signInPassword(e0,p0);}
+  if(k==='create'){var ec=($('si-email').value||'').trim().toLowerCase(),pc=$('si-pw').value||'';if(ec&&pc)createPassword(ec,pc);}
   if(k==='send'){var e1=($('si-email').value||'').trim();if(e1)sendCode(e1);}
   if(k==='code'){var c=($('si-code').value||'').replace(/\D/g,'');if(c)verifyCode(c);}
   if(k==='setpw'){setPassword($('pw-new').value||'');}
@@ -404,6 +427,7 @@ document.addEventListener('click',function(ev){
   if(a==='fapp'){var e=S.ui.edit;var i=e.apps.indexOf(k);if(b.checked&&i<0)e.apps.push(k);if(!b.checked&&i>=0)e.apps.splice(i,1);return;}
   function keepForm(){var e=S.ui.edit;if(e&&$('f-name')){e.name=$('f-name').value;if(e.isNew)e.email=$('f-email').value;}}
   if(a==='mode-code'){var e0=$('si-email');S.signin={email:e0?e0.value.trim():S.signin.email,sent:false,busy:false,msg:'',mode:'code'};render();}
+  if(a==='mode-create'){var e2=$('si-email');S.signin={email:e2?e2.value.trim():S.signin.email,sent:false,busy:false,msg:'',mode:'create'};render();}
   if(a==='mode-pw'){S.signin={email:S.signin.email,sent:false,busy:false,msg:'',mode:'password'};render();}
   if(a==='resend')sendCode(S.signin.email);
   if(a==='pwshow'){var p=$(b.getAttribute('data-t'));if(p){var sh=p.type==='password';p.type=sh?'text':'password';b.setAttribute('aria-pressed',String(sh));p.focus();}}

@@ -5,8 +5,9 @@ One installable app for R&A's productions. Sign in once, then pick a production 
 - **App:** https://ransdell91.github.io/RA-Media-App/
 - **Off The Map:** https://ransdell91.github.io/RA-Media-App/otm/
 - **SailorBloodMo0n:** https://ransdell91.github.io/RA-Media-App/sbm/
-- **Data:** Supabase project `fbskjgluladhqocklyre` in the R&A Media Productions LLC organization. Every app's records are in `public.records`, tagged by `app` (`otm`, `sbm`).
-- **Sign-in and access:** email and password, or an emailed code. Only addresses in `public.accounts` get in.
+- **Farm R&A:** https://ransdell91.github.io/RA-Media-App/farm/ (Humboldt Farms' farm journal and FSA Groundwork Plan)
+- **Data:** Supabase project `fbskjgluladhqocklyre` in the R&A Media Productions LLC organization. Every app's records are in `public.records`, tagged by `app` (`otm`, `sbm`, `farm`). Farm receipt photos are in the private storage bucket `farm-receipts`.
+- **Sign-in and access:** email and password, or an emailed code. Only addresses in `public.accounts` get in. Someone on the list with no password yet can choose one on the sign-in screen ("First time? Create your password", edge function `ra-first-password`).
 
 ## Account tiers
 | Tier | Apps | Can change things | Manages accounts |
@@ -20,6 +21,7 @@ Admins add, change and remove accounts in **Settings → Accounts & access**. Th
 ## Files
 - `index.html`: the R&A home (sign-in, app launcher, settings)
 - `otm/index.html`, `sbm/index.html`: the two production apps, each complete, with its own icons
+- `farm/index.html`: Farm R&A. Keeps a full copy on the phone and syncs through an outbox, so it works offline
 - `sw.js`: one service worker for everything (offline app shell, push notifications)
 - `manifest.webmanifest`, `icons/`: what phones need to install the app
 - `vendor/`: the Supabase client library, bundled so the app works offline
