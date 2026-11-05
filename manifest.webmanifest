@@ -35,7 +35,7 @@
       "url": "./otm/#today",
       "icons": [
         {
-          "src": "otm/icons/icon-192-v2.png",
+          "src": "otm/icons/icon-192.png",
           "sizes": "192x192"
         }
       ]
@@ -45,7 +45,7 @@
       "url": "./sbm/#today",
       "icons": [
         {
-          "src": "sbm/icons/icon-192-v2.png",
+          "src": "sbm/icons/icon-192.png",
           "sizes": "192x192"
         }
       ]
