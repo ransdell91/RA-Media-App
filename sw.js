@@ -2,9 +2,9 @@
 // The app shell is cached so each app opens without a connection.
 // Data is never cached here; each app keeps its own copy of what it last loaded.
 // Other apps on ransdell91.github.io (Farm R&A) share cache storage, so only ra-* caches are ever cleared.
-const VERSION = 'ra-1.08';
+const VERSION = 'ra-1.09';
 const SHELL = [
-  './', './index.html', './manifest.webmanifest', './vendor/supabase-2.45.4.js',
+  './', './index.html', './manifest.webmanifest', './vendor/supabase-2.45.4.js', './links.js',
   './icons/icon-192-v2.png', './icons/icon-512-v2.png', './icons/icon-maskable-512-v2.png', './icons/favicon-32.png', './icons/apple-touch-icon.png', './icons/badge-96.png', './icons/logo-on-dark.svg', './icons/logo-on-light.svg', './icons/icon.svg',
   './otm/', './otm/index.html', './otm/icons/icon-192.png', './otm/icons/favicon-32.png', './otm/icons/apple-touch-icon.png',
   './sbm/', './sbm/index.html', './sbm/icons/icon-192.png', './sbm/icons/favicon-32.png', './sbm/icons/apple-touch-icon.png', './sbm/icons/icon.svg',

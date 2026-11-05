@@ -236,6 +236,7 @@ body.gate .nav,body.gate .fab,body.gate .topbar{display:none}
 <div id="sheet"></div>
 <div id="toast" class="toast" role="status" hidden></div>
 <script src="../vendor/supabase-2.45.4.js"></script>
+<script src="../links.js"></script>
 <script>
 (function(){
 'use strict';
@@ -868,7 +869,8 @@ function sheetAccount(){
   var em=S.session&&S.session.user?S.session.user.email:'',n=S.outbox.length;
   return '<div class="between" style="align-items:center"><button class="linkbtn" type="button" data-act="close">Close</button><span class="eyebrow">ACCOUNT</span><span style="width:50px"></span></div><h2>'+esc(em)+'</h2>'+
     '<div class="list"><div class="pad between"><span style="font-weight:600">Saved to the cloud</span><span class="small">'+(n?n+' change'+(n>1?'s':'')+' waiting':'Everything is saved')+'</span></div>'+
-    '<div class="pad between" style="align-items:center"><span style="font-weight:600">Appearance</span><span class="chips"><button class="chip" type="button" data-act="settheme" data-k="light" aria-pressed="'+(theme()==='light')+'">Light</button><button class="chip" type="button" data-act="settheme" data-k="dark" aria-pressed="'+(theme()==='dark')+'">Dark</button></span></div></div>'+
+    '<div class="pad between" style="align-items:center"><span style="font-weight:600">Appearance</span><span class="chips"><button class="chip" type="button" data-act="settheme" data-k="light" aria-pressed="'+(theme()==='light')+'">Light</button><button class="chip" type="button" data-act="settheme" data-k="dark" aria-pressed="'+(theme()==='dark')+'">Dark</button></span></div>'+
+    (window.RALinks?'<div class="pad stack" style="gap:8px"><div class="between" style="align-items:center;flex-wrap:wrap;gap:8px"><span style="font-weight:600">Open links</span><span class="chips">'+RALinks.options.map(function(o){return '<button class="chip" type="button" data-act="setlinks" data-k="'+o[0]+'" aria-pressed="'+(RALinks.get()===o[0])+'">'+o[1]+'</button>';}).join('')+'</span></div><span class="small">'+RALinks.help+'</span></div>':'')+'</div>'+
     '<div class="stack" style="gap:8px"><h2 style="font-size:17px">Password</h2><p class="sub" style="margin:0">Set one to sign in without waiting for an email.</p><div class="row"><label class="sr" for="pw-new">New password</label><input id="pw-new" type="password" autocomplete="new-password" minlength="8" placeholder="At least 8 characters" style="flex:1;min-height:48px;padding:0 14px;border-radius:12px;border:1px solid rgba(var(--line-rgb),.25);background:var(--field);color:var(--ink)"><button class="btn" type="button" data-act="setpw">Save</button></div></div>'+
     '<div class="stack" style="gap:6px"><h2 style="font-size:17px">Install the app</h2><p class="sub" style="margin:0">Android (Chrome): menu \u22ee, then <b>Install app</b> or <b>Add to Home screen</b>. iPhone (Safari): Share, then <b>Add to Home Screen</b>.</p></div>'+
     '<button class="btn quiet" type="button" data-sact="signout">Sign out</button>';
@@ -963,6 +965,7 @@ document.addEventListener('click',function(e){
     return;}
   if(a==='review'){openSheet('review',{day:k});return;}
   if(a==='account'){openSheet('account');return;}
+  if(a==='setlinks'){if(window.RALinks)RALinks.set(k);renderSheet();return;}
   if(a==='settheme'){lsSet('sbm-theme',k);applyTheme();renderSheet();render();return;}
   if(a==='setpw'){setPassword((document.getElementById('pw-new')||{}).value||'');return;}
   if(a==='revitem'){var dd=t.getAttribute('data-day'),cur=S.checks[dd+'_review']||{},it=Object.assign({},cur.items||{});it[k]=!it[k];var all=REVIEW.every(function(r){return it[r[0]];});put('checks/'+dd+'_review',{items:it,done:all});return;}
