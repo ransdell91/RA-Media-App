@@ -366,7 +366,7 @@ body.signedout .nav, body.signedout .fab, body.signedout .topbar{display:none}
 <div class="app">
   <nav class="nav" aria-label="Main">
     <div class="rail-top">
-      <svg class="mark" width="36" height="33" viewBox="0 0 44 40" aria-hidden="true"><path d="M14 12 H2 V38 H42 V12 H30" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6 38 Q22 -26 38 38" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M11 38 Q22 -10 33 38" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M16 38 Q22 6 28 38" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="22" cy="5" r="3.6" fill="var(--pin)"/></svg>
+      <svg class="mark" width="38" height="35" viewBox="40 28 400 372" aria-label="Off The Map"><g transform="matrix(9.277317,0,0,9.044331,35.89903,44.195671)"><path d="M15.287,7.006L2,7.006L2,38L42,38L42,7.006L28.008,7.006" fill="none" stroke="currentColor" stroke-width="1.5"/></g><g transform="matrix(9.343045,0,0,9.510823,33.138459,26.468964)"><path d="M3.613,38C8.946,16.667 16.807,3.235 22.141,3.207C28.285,3.175 33.105,22.913 41.704,21.483" fill="none" stroke="currentColor" stroke-width="1.2"/></g><g transform="matrix(9.277317,0,0,9.510823,35.89903,26.468964)"><path d="M8.596,38C12.263,22 18.333,11.207 22,11.207C27.5,11.207 31.304,28.671 42,27" fill="none" stroke="currentColor" stroke-width="1"/></g><g transform="matrix(9.277317,0,0,9.510823,33.128985,29.618163)"><path d="M13.596,38C15.596,27.333 19.855,17.759 22.299,17.656C26.839,17.463 30,34 42,32" fill="none" stroke="currentColor" stroke-width="1"/></g><g transform="matrix(7.491879,0,0,7.427683,75.178666,19.832149)"><circle cx="22" cy="5" r="3.2" fill="var(--pin)"/></g></svg>
       <button class="railadd" type="button" data-act="add" aria-label="Quick add" data-tip="Quick add a task, idea, shot or note"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
     </div>
     <a class="tab" href="#today" data-tab="today" data-tip="Your day: focus episode, tasks and the calendar"><svg viewBox="0 0 24 24"><path d="M4 6h16v14H4zM4 10h16M9 3v5M15 3v5"/></svg>Today</a>
@@ -600,7 +600,7 @@ async function signInPassword(email,pw){
 }
 function viewSignIn(){location.replace(RA_HOME+'#signin');return '<div class="wrap"><div class="empty">Opening sign-in…</div></div>';}
 function viewSignInOld(){
-  var s=S.signin, mode=siMode(), mark='<svg width="56" height="51" viewBox="0 0 44 40" aria-hidden="true" style="color:var(--ink)"><path d="M14 12 H2 V38 H42 V12 H30" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6 38 Q22 -26 38 38" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M11 38 Q22 -10 33 38" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M16 38 Q22 6 28 38" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="22" cy="5" r="3.6" fill="var(--pin)"/></svg>';
+  var s=S.signin, mode=siMode(), mark='<svg width="64" height="60" viewBox="40 28 400 372" aria-hidden="true" style="color:var(--ink)"><g transform="matrix(9.277317,0,0,9.044331,35.89903,44.195671)"><path d="M15.287,7.006L2,7.006L2,38L42,38L42,7.006L28.008,7.006" fill="none" stroke="currentColor" stroke-width="1.5"/></g><g transform="matrix(9.343045,0,0,9.510823,33.138459,26.468964)"><path d="M3.613,38C8.946,16.667 16.807,3.235 22.141,3.207C28.285,3.175 33.105,22.913 41.704,21.483" fill="none" stroke="currentColor" stroke-width="1.2"/></g><g transform="matrix(9.277317,0,0,9.510823,35.89903,26.468964)"><path d="M8.596,38C12.263,22 18.333,11.207 22,11.207C27.5,11.207 31.304,28.671 42,27" fill="none" stroke="currentColor" stroke-width="1"/></g><g transform="matrix(9.277317,0,0,9.510823,33.128985,29.618163)"><path d="M13.596,38C15.596,27.333 19.855,17.759 22.299,17.656C26.839,17.463 30,34 42,32" fill="none" stroke="currentColor" stroke-width="1"/></g><g transform="matrix(7.491879,0,0,7.427683,75.178666,19.832149)"><circle cx="22" cy="5" r="3.2" fill="var(--pin)"/></g></svg>';
   var msg=s.msg?'<div class="notice warn"><span class="dot"></span>'+esc(s.msg)+'</div>':'';
   var body;
   if(mode==='password'){
@@ -1511,7 +1511,7 @@ document.addEventListener('keydown',function(ev){
 window.addEventListener('hashchange',function(){S.ui.epTab='overview';hideTip();render();var m=document.getElementById('main');if(m)m.scrollTop=0;});
 var lastWide=null;window.addEventListener('resize',function(){var w=wide();if(w!==lastWide){lastWide=w;render();}});
 lastWide=wide();
-var APP_VERSION='RA-1.09 · OTM 1.27';
+var APP_VERSION='RA-1.10 · OTM 1.28';
 S.ui.who=getWho();
 applyTheme();
 startScreen();
